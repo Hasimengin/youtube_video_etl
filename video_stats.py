@@ -2,6 +2,7 @@ import requests
 import  json
 import os
 import dotenv
+from datetime import datetime
 dotenv.load_dotenv()    
 
 
@@ -74,9 +75,14 @@ def extract_video_data(video_ids):
     except requests.exceptions.RequestException as e:
         raise e
 
+def save_to_json(data):
+    file_path=f"./data/YT_data_{datetime.today()}.json"
+    with open(file_path , "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)    
+
+
 if __name__ == "__main__":
     playlistId=get_playListId()
     video_ids=get_video_ids(playlistId)
     all_video_stats=extract_video_data(video_ids)
-    with open("video_stats.json","w") as f:
-        json.dump(all_video_stats,f,indent=4) 
+    save_to_json(all_video_stats)
